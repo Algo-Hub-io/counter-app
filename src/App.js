@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 const peraWallet = new PeraWalletConnect();
 
 // The app ID on testnet
-const appIndex = 94205372;
+const appIndex = ;
 
 // connect to the algorand node
 const algod = new algosdk.Algodv2('','https://testnet-api.algonode.cloud', 443);
@@ -37,7 +37,8 @@ function App() {
   
   return (
     <Container className='App-header'>
-      <meta name="name" content="Simple Counter App" />
+      // name your app here
+      <meta name="name" content="Your name here" />
       <h1> AlgoHUB - Lab 2</h1>
       <Row>
         <Col><Button className="btn-wallet"

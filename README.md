@@ -2,6 +2,7 @@
 
 This project repository is a template used for our 2nd Algorand Lab, [Deploying to Testnet and Interacting with Smart Contracts in the Browser](https://github.com/Algo-Hub-io/pyteal-course/Lab2).
 
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

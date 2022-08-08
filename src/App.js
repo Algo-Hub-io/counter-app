@@ -59,7 +59,7 @@ function App() {
         
       <Container>
         <Row>
-          <Col><Button className="btn-add-global"
+          <Col><Button className="btn-add-local"
      onClick={
         () => callCounterApplication('Add_Local')
       }>
@@ -75,9 +75,9 @@ function App() {
     </Button></Col>
         </Row>
         <Row>
-          <Col><Button className="btn-add-local"
+          <Col><Button className="btn-add-global"
      onClick={
-        () => callCounterApplication('Add_Local')
+        () => callCounterApplication('Add_Global')
       }>
       Increase
     </Button></Col>

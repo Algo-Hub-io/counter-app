@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 const peraWallet = new PeraWalletConnect();
 
 // The app ID on testnet
-const appIndex = 94205372;
+const appIndex = ;
 
 // connect to the algorand node
 const algod = new algosdk.Algodv2('','https://testnet-api.algonode.cloud', 443);
@@ -19,10 +19,12 @@ const algod = new algosdk.Algodv2('','https://testnet-api.algonode.cloud', 443);
 function App() {
   const [accountAddress, setAccountAddress] = useState(null);
   const [currentCount, setCurrentCount] = useState(null);
+  const [localCount, setLocalCount] = useState(null);
   const isConnectedToPeraWallet = !!accountAddress;
 
   useEffect(() => {
     checkCounterState();
+    checkLocalCounterState();
     // reconnect to session when the component is mounted
     peraWallet.reconnectSession().then((accounts) => {
       // Setup disconnect event listener
@@ -46,23 +48,53 @@ function App() {
       }>
       {isConnectedToPeraWallet ? "Disconnect" : "Connect to Pera Wallet"}
     </Button></Col>
+    <Col><Button className="btn-wallet"
+      onClick={
+        () => optInToApp()
+      }>
+      Opt-in
+    </Button></Col>
       </Row>
         
         
       <Container>
         <Row>
-          <Col><Button className="btn-add"
+          <Col><Button className="btn-add-local"
      onClick={
-        () => callCounterApplication('Add')
+      // add the method for the local add
+        () => callCounterApplication()
       }>
       Increase
     </Button></Col>
     <Col>
-    <h3>Count</h3>
+    <h3>Local Count</h3>
+    <span className='local-counter-text'>{localCount}</span>
+    </Col>
+          <Col><Button className="btn-dec-local" 
+     onClick={
+      // add the local deduct method
+      () => callCounterApplication()
+      }>
+      Decrease
+    </Button></Col>
+        </Row>
+        <Row>
+          <Col><Button className="btn-add-global"
+     onClick={
+      // add the global add function
+        () => callCounterApplication()
+      }>
+      Increase
+    </Button></Col>
+    <Col>
+    <h3>Global Count</h3>
     <span className='counter-text'>{currentCount}</span>
     </Col>
-          <Col><Button className="btn-dec" 
-     onClick={() => callCounterApplication('Deduct')}>
+          <Col><Button className="btn-dec-global" 
+     onClick={
+      // add the deduct global function
+      () => callCounterApplication()
+      }>
       Decrease
     </Button></Col>
         </Row>
@@ -84,6 +116,22 @@ function App() {
       setAccountAddress(null);
     }
 
+    async function optInToApp() {
+      const suggestedParams = await algod.getTransactionParams().do();
+      const optInTxn = algosdk.makeApplicationOptInTxn(
+        accountAddress,
+        suggestedParams,
+        appIndex
+      );
+
+      const optInTxGroup = [{txn: optInTxn, signers: [accountAddress]}];
+
+        const signedTx = await peraWallet.signTransaction([optInTxGroup]);
+        console.log(signedTx);
+        const { txId } = await algod.sendRawTransaction(signedTx).do();
+        const result = await waitForConfirmation(algod, txId, 2);
+    }
+
     async function checkCounterState() {
       try {
         const counter = await algod.getApplicationByID(appIndex).do();
@@ -92,6 +140,20 @@ function App() {
         } else {
           setCurrentCount(0);
         }
+      } catch (e) {
+        console.error('There was an error connecting to the algorand node: ', e)
+      }
+    }
+
+    async function checkLocalCounterState() {
+      try {
+        const accountInfo = await algod.accountApplicationInformation(accountAddress,appIndex).do();
+        if (!!accountInfo['app-local-state']['key-value'][0].value.uint) {
+          setLocalCount(accountInfo['app-local-state']['key-value'][0].value.uint);
+        } else {
+          setLocalCount(0);
+        }
+        console.log(accountInfo['app-local-state']['key-value'][0].value.uint);
       } catch (e) {
         console.error('There was an error connecting to the algorand node: ', e)
       }
@@ -117,6 +179,7 @@ function App() {
         const { txId } = await algod.sendRawTransaction(signedTx).do();
         const result = await waitForConfirmation(algod, txId, 2);
         checkCounterState();
+        checkLocalCounterState();
       
       } catch (e) {
         console.error(`There was an error calling the counter app: ${e}`);

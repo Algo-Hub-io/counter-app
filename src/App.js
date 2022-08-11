@@ -39,8 +39,8 @@ function App() {
   
   return (
     <Container className='App-header'>
-      <meta name="name" content="Simple Counter App" />
-      <h1> AlgoHUB - Lab 2</h1>
+      <meta name="name" content="Modified Counter App" />
+      <h1> AlgoHUB - Lab 3</h1>
       <Row>
         <Col><Button className="btn-wallet"
       onClick={
@@ -148,6 +148,7 @@ function App() {
         console.log(accountInfo['app-local-state']['key-value'][0].value.uint);
       } catch (e) {
         console.error('There was an error connecting to the algorand node: ', e)
+        setLocalCount(0);
       }
     }
 

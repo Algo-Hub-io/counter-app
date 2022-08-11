@@ -39,8 +39,8 @@ function App() {
   
   return (
     <Container className='App-header'>
-      <meta name="name" content="Simple Counter App" />
-      <h1> AlgoHUB - Lab 2</h1>
+      <meta name="name" content="Modified Counter App" />
+      <h1> AlgoHUB - Lab 3</h1>
       <Row>
         <Col><Button className="btn-wallet"
       onClick={

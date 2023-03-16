@@ -37,7 +37,6 @@ function App() {
 
   return (
     <Container className='App-header'>
-      // name your app here
       <meta name="name" content="Your name here" />
       <h1> AlgoHUB - Lab 2</h1>
       <Row>

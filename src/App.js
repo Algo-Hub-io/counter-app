@@ -1,5 +1,5 @@
 import './App.css';
-import {PeraWalletConnect} from '@perawallet/connect';
+import { PeraWalletConnect } from '@perawallet/connect';
 import algosdk, { waitForConfirmation } from 'algosdk';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -11,10 +11,10 @@ import { useEffect, useState } from 'react';
 const peraWallet = new PeraWalletConnect();
 
 // The app ID on testnet
-const appIndex = ;
+const appIndex = 122184273;
 
 // connect to the algorand node
-const algod = new algosdk.Algodv2('','https://testnet-api.algonode.cloud', 443);
+const algod = new algosdk.Algodv2('', 'https://testnet-api.algonode.cloud', 443);
 
 function App() {
   const [accountAddress, setAccountAddress] = useState(null);
@@ -33,8 +33,8 @@ function App() {
       }
     })
 
-  },[]);
-  
+  }, []);
+
   return (
     <Container className='App-header'>
       // name your app here
@@ -42,30 +42,30 @@ function App() {
       <h1> AlgoHUB - Lab 2</h1>
       <Row>
         <Col><Button className="btn-wallet"
-      onClick={
-        isConnectedToPeraWallet ? handleDisconnectWalletClick : handleConnectWalletClick
-      }>
-      {isConnectedToPeraWallet ? "Disconnect" : "Connect to Pera Wallet"}
-    </Button></Col>
+          onClick={
+            isConnectedToPeraWallet ? handleDisconnectWalletClick : handleConnectWalletClick
+          }>
+          {isConnectedToPeraWallet ? "Disconnect" : "Connect to Pera Wallet"}
+        </Button></Col>
       </Row>
-        
-        
+
+
       <Container>
         <Row>
           <Col><Button className="btn-add"
-     onClick={
-        () => callCounterApplication('Add')
-      }>
-      Increase
-    </Button></Col>
-    <Col>
-    <h3>Count</h3>
-    <span className='counter-text'>{currentCount}</span>
-    </Col>
-          <Col><Button className="btn-dec" 
-     onClick={() => callCounterApplication('Deduct')}>
-      Decrease
-    </Button></Col>
+            onClick={
+              () => callCounterApplication('Add')
+            }>
+            Increase
+          </Button></Col>
+          <Col>
+            <h3>Count</h3>
+            <span className='counter-text'>{currentCount}</span>
+          </Col>
+          <Col><Button className="btn-dec"
+            onClick={() => callCounterApplication('Deduct')}>
+            Decrease
+          </Button></Col>
         </Row>
       </Container>
     </Container>
@@ -80,49 +80,49 @@ function App() {
     });
   }
 
-    function handleDisconnectWalletClick() {
-      peraWallet.disconnect();
-      setAccountAddress(null);
-    }
+  function handleDisconnectWalletClick() {
+    peraWallet.disconnect();
+    setAccountAddress(null);
+  }
 
-    async function checkCounterState() {
-      try {
-        const counter = await algod.getApplicationByID(appIndex).do();
-        if (!!counter.params['global-state'][0].value.uint) {
-          setCurrentCount(counter.params['global-state'][0].value.uint);
-        } else {
-          setCurrentCount(0);
-        }
-      } catch (e) {
-        console.error('There was an error connecting to the algorand node: ', e)
+  async function checkCounterState() {
+    try {
+      const counter = await algod.getApplicationByID(appIndex).do();
+      if (!!counter.params['global-state'][0].value.uint) {
+        setCurrentCount(counter.params['global-state'][0].value.uint);
+      } else {
+        setCurrentCount(0);
       }
+    } catch (e) {
+      console.error('There was an error connecting to the algorand node: ', e)
     }
+  }
 
-    async function callCounterApplication(action) {
-      try {
-        // get suggested params
-        const suggestedParams = await algod.getTransactionParams().do();
-        const appArgs = [new Uint8Array(Buffer.from(action))];
-        
-        const actionTx = algosdk.makeApplicationNoOpTxn(
-          accountAddress,
-          suggestedParams,
-          appIndex,
-          appArgs
-          );
+  async function callCounterApplication(action) {
+    try {
+      // get suggested params
+      const suggestedParams = await algod.getTransactionParams().do();
+      const appArgs = [new Uint8Array(Buffer.from(action))];
 
-        const actionTxGroup = [{txn: actionTx, signers: [accountAddress]}];
+      const actionTx = algosdk.makeApplicationNoOpTxn(
+        accountAddress,
+        suggestedParams,
+        appIndex,
+        appArgs
+      );
 
-        const signedTx = await peraWallet.signTransaction([actionTxGroup]);
-        console.log(signedTx);
-        const { txId } = await algod.sendRawTransaction(signedTx).do();
-        const result = await waitForConfirmation(algod, txId, 2);
-        checkCounterState();
-      
-      } catch (e) {
-        console.error(`There was an error calling the counter app: ${e}`);
-      }
+      const actionTxGroup = [{ txn: actionTx, signers: [accountAddress] }];
+
+      const signedTx = await peraWallet.signTransaction([actionTxGroup]);
+      console.log(signedTx);
+      const { txId } = await algod.sendRawTransaction(signedTx).do();
+      const result = await waitForConfirmation(algod, txId, 2);
+      checkCounterState();
+
+    } catch (e) {
+      console.error(`There was an error calling the counter app: ${e}`);
     }
+  }
 }
 
 export default App;

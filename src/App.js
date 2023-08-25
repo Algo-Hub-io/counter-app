@@ -25,13 +25,13 @@ function App() {
     checkCounterState();
     // reconnect to session when the component is mounted
     peraWallet.reconnectSession().then((accounts) => {
-      // Setup disconnect event listener
-      peraWallet.connector?.on('disconnect', handleDisconnectWalletClick);
-
+      // Setup the disconnect event listener
+      peraWallet.connector?.on("disconnect", handleDisconnectWalletClick);
+    
       if (accounts.length) {
         setAccountAddress(accounts[0]);
       }
-    })
+    });
 
   }, []);
 

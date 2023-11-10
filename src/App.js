@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 const peraWallet = new PeraWalletConnect();
 
 // The app ID on testnet
-const appIndex = ;
+const appIndex = 476126388;
 
 // connect to the algorand node
 const algod = new algosdk.Algodv2('','https://testnet-api.algonode.cloud', 443);
@@ -40,7 +40,7 @@ function App() {
   return (
     <Container className='App-header'>
       <meta name="name" content="Modified Counter App" />
-      <h1> AlgoHUB - Lab 3</h1>
+      <h1> AlgoHUB - Week 4</h1>
       <Row>
         <Col><Button className="btn-wallet"
       onClick={
@@ -50,7 +50,7 @@ function App() {
     </Button></Col>
     <Col><Button className="btn-wallet"
       onClick={
-        () => optInToApp()
+        () => callCounterApplication('MMbVig==')
       }>
       Opt-in
     </Button></Col>
@@ -62,7 +62,7 @@ function App() {
           <Col><Button className="btn-add-local"
      onClick={
       // add the method for the local add
-        () => callCounterApplication()
+        () => callCounterApplication('teCWHQ==')
       }>
       Increase
     </Button></Col>
@@ -73,7 +73,7 @@ function App() {
           <Col><Button className="btn-dec-local" 
      onClick={
       // add the local deduct method
-      () => callCounterApplication()
+      () => callCounterApplication('fE3fHw==')
       }>
       Decrease
     </Button></Col>
@@ -82,7 +82,7 @@ function App() {
           <Col><Button className="btn-add-global"
      onClick={
       // add the global add function
-        () => callCounterApplication()
+        () => callCounterApplication('i03JgA==')
       }>
       Increase
     </Button></Col>
@@ -93,7 +93,7 @@ function App() {
           <Col><Button className="btn-dec-global" 
      onClick={
       // add the deduct global function
-      () => callCounterApplication()
+      () => callCounterApplication('fE3fHw==')
       }>
       Decrease
     </Button></Col>

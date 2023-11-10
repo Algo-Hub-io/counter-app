@@ -6,12 +6,13 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useEffect, useState } from 'react';
+import { accordionClasses } from '@mui/material';
 
 // Create the PeraWalletConnect instance outside the component
 const peraWallet = new PeraWalletConnect();
 
 // The app ID on testnet
-const appIndex = 122184273;
+const appIndex = 475816592;
 
 // connect to the algorand node
 const algod = new algosdk.Algodv2('', 'https://testnet-api.algonode.cloud', 443);
@@ -62,7 +63,7 @@ function App() {
             <span className='counter-text'>{currentCount}</span>
           </Col>
           <Col><Button className="btn-dec"
-            onClick={() => callCounterApplication('Deduct')}>
+            onClick={() => callCounterApplication('deduct')}>
             Decrease
           </Button></Col>
         </Row>
@@ -87,7 +88,7 @@ function App() {
   async function checkCounterState() {
     try {
       const counter = await algod.getApplicationByID(appIndex).do();
-      if (!!counter.params['global-state'][0].value.uint) {
+      if (!!counter.params['global-state']) {
         setCurrentCount(counter.params['global-state'][0].value.uint);
       } else {
         setCurrentCount(0);
@@ -102,13 +103,13 @@ function App() {
       // get suggested params
       const suggestedParams = await algod.getTransactionParams().do();
       const appArgs = [new Uint8Array(Buffer.from(action))];
-
-      const actionTx = algosdk.makeApplicationNoOpTxn(
-        accountAddress,
+      console.log(accountAddress)
+      const actionTx = algosdk.makeApplicationNoOpTxn({
+        from: accountAddress,
         suggestedParams,
         appIndex,
         appArgs
-      );
+    });
 
       const actionTxGroup = [{ txn: actionTx, signers: [accountAddress] }];
 

@@ -12,7 +12,7 @@ import { accordionClasses } from '@mui/material';
 const peraWallet = new PeraWalletConnect();
 
 // The app ID on testnet
-const appIndex = 475816592;
+const appIndex = 476078896;
 
 // connect to the algorand node
 const algod = new algosdk.Algodv2('', 'https://testnet-api.algonode.cloud', 443);
@@ -39,7 +39,7 @@ function App() {
   return (
     <Container className='App-header'>
       <meta name="name" content="Your name here" />
-      <h1> AlgoHUB - Lab 2</h1>
+      <h1> AlgoHUB - Counter App</h1>
       <Row>
         <Col><Button className="btn-wallet"
           onClick={
@@ -54,7 +54,7 @@ function App() {
         <Row>
           <Col><Button className="btn-add"
             onClick={
-              () => callCounterApplication('Add')
+              () => callCounterApplication('i03JgA==')
             }>
             Increase
           </Button></Col>
@@ -63,7 +63,7 @@ function App() {
             <span className='counter-text'>{currentCount}</span>
           </Col>
           <Col><Button className="btn-dec"
-            onClick={() => callCounterApplication('deduct')}>
+            onClick={() => callCounterApplication('fE3fHw==')}>
             Decrease
           </Button></Col>
         </Row>
